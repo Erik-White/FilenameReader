@@ -1,36 +1,30 @@
-﻿using System;
-using System.IO;
-using System.Text;
-namespace ConsoleApp1
+﻿using FilenameReader.Infrastructure;
+
+namespace FilenameReaderCli
 {
-    class Program
+    public static class Program
     {
-        public static string[] args;
-        Program(string[] args)
+        public static void Main(string[] args)
         {
-            Program.args = args;
-        }
-        private void Run()
-        {
-            var f = File.Open(args[0], FileMode.Open);
-            int pos = args[0].IndexOf('.');
-            string name = args[0].Substring(0, pos);
-            System.IO.StreamReader file = new System.IO.StreamReader(f);
-            string line;
-            int counter = 0;
-            while (true)
+            var filepath = args.FirstOrDefault();
+            if (string.IsNullOrEmpty(filepath))
             {
-                line = file.ReadLine();
-                if (line == null) break;
-                if (line.Contains(name))
-                    counter++;
+                Console.WriteLine("A file name or path must be supplied.");
+                return;
             }
-            Console.WriteLine("found " + counter);
-        }
-        static void Main(string[] args)
-        {
-            Program program = new Program(args);
-            program.Run();
+
+            var parser = new FileParser();
+
+            try
+            {
+                var count = parser.CountFileContents(filepath);
+
+                Console.WriteLine(count);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
