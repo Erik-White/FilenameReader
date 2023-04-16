@@ -22,16 +22,15 @@ public class Program
 
         logger.LogInformation("Counting filename instances in the contents of the file {filepath}", filePath.FullPath);
 
-        try
-        {
-            var count = fileParser.CountFileContents(filePath);
+        var result = fileParser.CountFileContents(filePath);
 
-            logger.LogInformation("Filename count: {count}", count);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An unexpected error occurred: {message}", ex.Message);
-        }
+        result.Switch(
+            count => logger.LogInformation("Filename count: {count}", count),
+            validationFailure => logger.LogError(
+                "The file path or name was not valid: {message}", string.Join(Environment.NewLine, validationFailure.ErrorMessages)),
+            _ => logger.LogError("The file could not be found."),
+            error => logger.LogError(error.Value!, "An unexpected error occurred: {message}", error.Value.Message)
+        );
     }
 
     private static IServiceProvider BuildServiceProvider()
