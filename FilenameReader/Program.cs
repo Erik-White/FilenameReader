@@ -10,19 +10,19 @@ public class Program
 {
     protected Program() { }
 
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var serviceProvider = BuildServiceProvider();
         var logger = serviceProvider
             .GetRequiredService<ILoggerFactory>()
             .CreateLogger<Program>();
 
-        var fileParser = serviceProvider.GetRequiredService<IFileParser>();
+        var textSearcher = serviceProvider.GetRequiredService<ITextSearcher>();
         var filePath = new FilePath(args.FirstOrDefault() ?? string.Empty);
 
         logger.LogInformation("Counting filename instances in the contents of the file {filepath}", filePath.FullPath);
 
-        var result = fileParser.CountFileContents(filePath);
+        var result = await textSearcher.CountFileContentsAsync(filePath, filePath.Filename);
 
         result.Switch(
             count => logger.LogInformation("Filename count: {count}", count),

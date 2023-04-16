@@ -2,9 +2,9 @@
 
 namespace FilenameReader.Infrastructure.Test.AutoData;
 
-public class FileParserAutoNSubstituteDataAttribute : AutoNSubstituteDataAttribute
+public class TextSearcherAutoNSubstituteDataAttribute : AutoNSubstituteDataAttribute
 {
-    public FileParserAutoNSubstituteDataAttribute() : base(fixture =>
+    public TextSearcherAutoNSubstituteDataAttribute() : base(fixture =>
     {
         fixture.Customize(new MockFileSystemCustomization());
         fixture.Customize(new FilePathValidatorOverrideCustomization());

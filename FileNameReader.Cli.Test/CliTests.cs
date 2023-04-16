@@ -9,15 +9,15 @@ public class CliTests
     [TestCase("empty_file.txt", 0)]
     [TestCase("jfif.jpg", 0)]
     [TestCase("lorem.txt", 7)]
-    public void Main_Should_NotThrow_AndOutput_ExpectedCount(string filename, int expectedCount)
+    public async Task Main_Should_NotThrow_AndOutput_ExpectedCount(string filename, int expectedCount)
     {
         var filePath = Path.Join(TestHelper.TestDataPath, filename);
         using var stringWriter = new StringWriter();
         Console.SetOut(stringWriter);
 
-        Action act = () => Program.Main(new[] { filePath });
+        var act = () => Program.Main(new[] { filePath });
 
-        act.Should().NotThrow();
+        await act.Should().NotThrowAsync();
         ParseStringWriterCount(stringWriter).Should().Be(expectedCount);
     }
 
