@@ -18,7 +18,11 @@ public class FileParser : IFileParser
 
     public int CountFileContents(FilePath filePath)
     {
-        _filePathValidator.ValidateAndThrow(filePath);
+        var validationResult = _filePathValidator.Validate(filePath);
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
 
         using var f = _fileSystem.File.OpenRead(filePath.FullPath);
 
