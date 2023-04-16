@@ -1,25 +1,33 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IO.Abstractions;
+using System.Text.RegularExpressions;
+using FilenameReader.Core;
+using FluentValidation;
 
 namespace FilenameReader.Infrastructure;
 
-public class FileParser
+public class FileParser : IFileParser
 {
-    public int CountFileContents(string path)
-    {
-        var filename = Path.GetFileNameWithoutExtension(path);
-        if (string.IsNullOrEmpty(filename))
-        {
-            throw new ArgumentOutOfRangeException(nameof(path));
-        }
+    private readonly IValidator<FilePath> _filePathValidator;
+    private readonly IFileSystem _fileSystem;
 
-        using var f = File.Open(path, FileMode.Open);
+    public FileParser(IValidator<FilePath> filePathValidator, IFileSystem fileSystem)
+    {
+        _filePathValidator = filePathValidator;
+        _fileSystem = fileSystem;
+    }
+
+    public int CountFileContents(FilePath filePath)
+    {
+        _filePathValidator.ValidateAndThrow(filePath);
+
+        using var f = _fileSystem.File.OpenRead(filePath.FullPath);
 
         return ReadLines(f)
             .Where(line => !string.IsNullOrEmpty(line))
-            .Sum(line => Regex.Matches(line, Regex.Escape(filename)).Count);
+            .Sum(line => Regex.Matches(line!, Regex.Escape($"{filePath.Filename}")).Count);
     }
 
-    internal static IEnumerable<string?> ReadLines(FileStream fileStream)
+    internal static IEnumerable<string?> ReadLines(FileSystemStream fileStream)
     {
         using var file = new StreamReader(fileStream);
 

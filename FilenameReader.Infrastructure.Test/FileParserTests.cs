@@ -1,24 +1,18 @@
+using System.IO.Abstractions.TestingHelpers;
+using FilenameReader.Core;
+using FilenameReader.Infrastructure.Validators;
+
 namespace FilenameReader.Infrastructure.Test;
 
 [TestFixture]
 public class FileParserTests
 {
     [Test]
-    public void EmptyFilePath_Should_ThrowArgumentOutOfRangeException()
+    public void MissingFile_ShouldThrow_FileNotFoundException()
     {
-        var parser = new FileParser();
+        var parser = new FileParser(new FilePathValidator(), new MockFileSystem());
 
-        Action act = () => parser.CountFileContents(string.Empty);
-
-        act.Should().ThrowExactly<ArgumentOutOfRangeException>();
-    }
-
-    [Test]
-    public void MissingFile_Should_ThrowArgumentOutOfRangeException()
-    {
-        var parser = new FileParser();
-
-        Action act = () => parser.CountFileContents(Guid.NewGuid().ToString());
+        Action act = () => parser.CountFileContents(new FilePath(Guid.NewGuid().ToString()));
 
         act.Should().ThrowExactly<FileNotFoundException>();
     }

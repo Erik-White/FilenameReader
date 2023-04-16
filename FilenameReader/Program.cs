@@ -1,30 +1,46 @@
-﻿using FilenameReader.Infrastructure;
+﻿using FilenameReader.Cli;
+using FilenameReader.Core;
+using FilenameReader.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-namespace FilenameReaderCli
+namespace FilenameReaderCli;
+
+public class Program
 {
-    public static class Program
+    protected Program() { }
+
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var serviceProvider = BuildServiceProvider();
+        var logger = serviceProvider
+            .GetRequiredService<ILoggerFactory>()
+            .CreateLogger<Program>();
+
+        var fileParser = serviceProvider.GetRequiredService<IFileParser>();
+        var filePath = new FilePath(args.FirstOrDefault() ?? string.Empty);
+
+        logger.LogInformation("Counting filename instances in the contents of the file {filepath}", filePath.FullPath);
+
+        try
         {
-            var filepath = args.FirstOrDefault();
-            if (string.IsNullOrEmpty(filepath))
-            {
-                Console.WriteLine("A file name or path must be supplied.");
-                return;
-            }
+            var count = fileParser.CountFileContents(filePath);
 
-            var parser = new FileParser();
-
-            try
-            {
-                var count = parser.CountFileContents(filepath);
-
-                Console.WriteLine(count);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            logger.LogInformation("Filename count: {count}", count);
         }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An unexpected error occurred: {message}", ex.Message);
+        }
+    }
+
+    private static IServiceProvider BuildServiceProvider()
+    {
+        var serviceCollection = new ServiceCollection();
+
+        serviceCollection.AddCliServices();
+        serviceCollection.AddInfrastructureServices();
+
+        return serviceCollection.BuildServiceProvider();
     }
 }
