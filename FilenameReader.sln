@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilenameReader.Cli", "FilenameReader\FilenameReader.Cli.csproj", "{08F27FBC-172C-4303-B17C-0B1B5908A7C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilenameReader.Cli", "FilenameReader\FilenameReader.Cli.csproj", "{08F27FBC-172C-4303-B17C-0B1B5908A7C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilenameReader.Cli.Test", "FileNameReader.Cli.Test\FilenameReader.Cli.Test.csproj", "{873DDBC8-C212-47FD-83DD-85BAC5EE9CFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilenameReader.Cli.Test", "FileNameReader.Cli.Test\FilenameReader.Cli.Test.csproj", "{873DDBC8-C212-47FD-83DD-85BAC5EE9CFA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EBC8E60D-B4AF-406A-A672-66EFD0306FB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilenameReader.Core", "FilenameReader.Core\FilenameReader.Core.csproj", "{B755CECB-02A3-439F-8B33-CF3861CC314D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilenameReader.Core", "FilenameReader.Core\FilenameReader.Core.csproj", "{B755CECB-02A3-439F-8B33-CF3861CC314D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilenameReader.Infrastructure", "FilenameReader.Infrastructure\FilenameReader.Infrastructure.csproj", "{56CC2577-8796-4F3E-BC18-10605D18E221}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilenameReader.Infrastructure", "FilenameReader.Infrastructure\FilenameReader.Infrastructure.csproj", "{56CC2577-8796-4F3E-BC18-10605D18E221}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilenameReader.Infrastructure.Test", "FilenameReader.Infrastructure.Test\FilenameReader.Infrastructure.Test.csproj", "{986070AB-A24A-4CAD-BF49-4115290772A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilenameReader.Infrastructure.Test", "FilenameReader.Infrastructure.Test\FilenameReader.Infrastructure.Test.csproj", "{986070AB-A24A-4CAD-BF49-4115290772A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilenameReader.Benchmarking", "FilenameReader.Benchmarking\FilenameReader.Benchmarking.csproj", "{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,14 @@ Global
 		{986070AB-A24A-4CAD-BF49-4115290772A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{986070AB-A24A-4CAD-BF49-4115290772A5}.Release|x64.ActiveCfg = Release|Any CPU
 		{986070AB-A24A-4CAD-BF49-4115290772A5}.Release|x64.Build.0 = Release|Any CPU
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}.Debug|x64.Build.0 = Debug|Any CPU
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}.Release|x64.ActiveCfg = Release|Any CPU
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +80,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{873DDBC8-C212-47FD-83DD-85BAC5EE9CFA} = {EBC8E60D-B4AF-406A-A672-66EFD0306FB3}
 		{986070AB-A24A-4CAD-BF49-4115290772A5} = {EBC8E60D-B4AF-406A-A672-66EFD0306FB3}
+		{E63D6BA3-7BC2-4C0C-BF86-7BA6661EA915} = {EBC8E60D-B4AF-406A-A672-66EFD0306FB3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CA353D5-0E1A-4C81-979A-F75DE6E6A285}
