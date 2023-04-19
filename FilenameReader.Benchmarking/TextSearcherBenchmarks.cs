@@ -3,7 +3,6 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using FilenameReader.Core;
-using FilenameReader.Infrastructure.Validators;
 
 namespace FilenameReader.Infrastructure.Test;
 
@@ -17,7 +16,7 @@ public class TextSearcherBenchmarks
     public TextSearcherBenchmarks()
     {
         _fileSystem = new MockFileSystem();
-        _textSearcher = new TextSearcher(new FilePathValidator(), _fileSystem);
+        _textSearcher = new RegexTextSearcher();
         _filePath = new FilePath(Guid.NewGuid().ToString());
     }
 
@@ -26,7 +25,7 @@ public class TextSearcherBenchmarks
     {
         using var stream = _fileSystem.File.OpenWrite(_filePath.FullPath);
 
-        // Create a 1GB file that contians the file name once at the end
+        // Create a 1GB file that contains the file name once at the end
         WriteRandomContent(stream, fileSizeMegabytes: 1024);
         var filePathBytes = Encoding.UTF8.GetBytes(_filePath.Filename);
         stream.Write(filePathBytes, 0, filePathBytes.Length);
@@ -59,6 +58,8 @@ public class TextSearcherBenchmarks
         for (int i = 0; i < fileSizeMegabytes * BlocksPerMegabyte; i++)
         {
             random.NextBytes(data);
+            // Write a newline character to the end of each block
+            data[^1] = 0x0A;
             stream.Write(data, 0, data.Length);
         }
     }

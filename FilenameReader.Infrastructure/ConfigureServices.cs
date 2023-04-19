@@ -11,7 +11,8 @@ public static class ConfigureServices
     {
         services.AddScoped<IFileSystem, FileSystem>();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddScoped<ITextSearcher, TextSearcher>();
+        services.AddScoped<ITextSearcher, RegexTextSearcher>();
+        services.AddScoped<IFileTextSearcher, FileTextSearcher>();
 
         return services;
     }

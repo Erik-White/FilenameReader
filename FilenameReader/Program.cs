@@ -17,7 +17,7 @@ public class Program
             .GetRequiredService<ILoggerFactory>()
             .CreateLogger<Program>();
 
-        var textSearcher = serviceProvider.GetRequiredService<ITextSearcher>();
+        var textSearcher = serviceProvider.GetRequiredService<IFileTextSearcher>();
         var filePath = new FilePath(args.FirstOrDefault() ?? string.Empty);
 
         logger.LogInformation("Counting filename instances in the contents of the file {filepath}", filePath.FullPath);
