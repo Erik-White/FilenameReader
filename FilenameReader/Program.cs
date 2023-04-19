@@ -8,31 +8,49 @@ namespace FilenameReaderCli;
 
 public class Program
 {
+    public enum ReturnCode
+    {
+        Success = 0,
+        Error = -1
+    }
+
     protected Program() { }
 
-    public static async Task Main(string[] args)
+    public static async Task<int> Main(string[] args)
     {
+        var returnCode = ReturnCode.Success;
         var serviceProvider = BuildServiceProvider();
         var logger = serviceProvider
             .GetRequiredService<ILoggerFactory>()
             .CreateLogger<Program>();
 
-        var textSearcher = serviceProvider.GetRequiredService<IFileTextSearcher>();
-        var filePath = new FilePath(args.FirstOrDefault() ?? string.Empty);
+        try
+        {
 
-        logger.LogInformation("Counting filename {filename} instances in the contents of the file {filepath}", filePath.Filename, filePath.FullPath);
+            var textSearcher = serviceProvider.GetRequiredService<IFileTextSearcher>();
+            var filePath = new FilePath(args.FirstOrDefault() ?? string.Empty);
 
-        var result = await textSearcher
-            .CountFileContentsAsync(filePath, filePath.Filename, progress: GetProgress(logger))
-            .ConfigureAwait(false);
+            logger.LogInformation("Counting filename {filename} instances in the contents of the file {filepath}", filePath.Filename, filePath.FullPath);
 
-        result.Switch(
-            count => logger.LogInformation("Filename count: {count}", count),
-            validationFailure => logger.LogError(
-                "The file path or name was not valid: {message}", string.Join(Environment.NewLine, validationFailure.ErrorMessages)),
-            _ => logger.LogError("The file could not be found."),
-            error => logger.LogError(error.Value!, "An unexpected error occurred: {message}", error.Value.Message)
-        );
+            var result = await textSearcher
+                .CountFileContentsAsync(filePath, filePath.Filename, progress: GetProgress(logger))
+                .ConfigureAwait(false);
+
+            result.Switch(
+                count => logger.LogInformation("Filename count: {count}", count),
+                validationFailure => logger.LogError(
+                    "The file path or name was not valid: {message}", string.Join(Environment.NewLine, validationFailure.ErrorMessages)),
+                _ => logger.LogError("The file could not be found."),
+                error => logger.LogError(error.Value!, "An unexpected error occurred: {message}", error.Value.Message)
+            );
+        }
+        catch(Exception ex)
+        {
+            logger.LogError(ex, "An unexpected error occurred: {errorMessage}", ex.Message);
+            returnCode = ReturnCode.Error;
+        }
+
+        return (int)returnCode;
     }
 
     private static IServiceProvider BuildServiceProvider()
