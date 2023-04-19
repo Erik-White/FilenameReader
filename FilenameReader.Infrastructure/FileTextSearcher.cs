@@ -68,7 +68,9 @@ public class FileTextSearcher : IFileTextSearcher
         {
             using var fileStream = _fileSystem.File.OpenRead(filePath.FullPath);
 
-            return await _textSearcher.CountStreamContentsAsync(fileStream, searchValue, searchOptions, progress, cancellationToken);
+            return await _textSearcher
+                .CountStreamContentsAsync(fileStream, searchValue, searchOptions, progress, cancellationToken)
+                .ConfigureAwait(false);
         }
         catch (FileNotFoundException)
         {

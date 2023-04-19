@@ -79,7 +79,7 @@ public class RegexTextSearcherTests
 
         var syncResult = sut.CountStreamContents(stream, searchText, searchOptions);
         stream.Seek(0, SeekOrigin.Begin);
-        var asyncResult = await sut.CountStreamContentsAsync(stream, searchText, searchOptions, CancellationToken.None);
+        var asyncResult = await sut.CountStreamContentsAsync(stream, searchText, searchOptions);
 
         syncResult.Should().Be(asyncResult, "Both synchronous and asyncronous methods should return the same results.");
     }

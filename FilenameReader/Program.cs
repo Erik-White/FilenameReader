@@ -22,7 +22,9 @@ public class Program
 
         logger.LogInformation("Counting filename {filename} instances in the contents of the file {filepath}", filePath.Filename, filePath.FullPath);
 
-        var result = await textSearcher.CountFileContentsAsync(filePath, filePath.Filename, progress: GetProgress(logger));
+        var result = await textSearcher
+            .CountFileContentsAsync(filePath, filePath.Filename, progress: GetProgress(logger))
+            .ConfigureAwait(false);
 
         result.Switch(
             count => logger.LogInformation("Filename count: {count}", count),

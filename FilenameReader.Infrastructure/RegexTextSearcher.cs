@@ -42,7 +42,8 @@ public class RegexTextSearcher : ITextSearcher
             {
                 await ReadLinesAsync(stream, searchValue.Length, progress, cancellationToken)
                     .Where(line => !string.IsNullOrEmpty(line))
-                    .ForEachAsync(line => queue.Add(line!), cancellationToken);
+                    .ForEachAsync(line => queue.Add(line!), cancellationToken)
+                    .ConfigureAwait(false);
             }
             finally
             {
@@ -57,7 +58,7 @@ public class RegexTextSearcher : ITextSearcher
             .WithDegreeOfParallelism(Environment.ProcessorCount - 2)
             .ForAll(line => Interlocked.Add(ref count, Regex.Matches(line!, filenameRegexPattern, regexCaseOption).Count));
 
-        await readLines;
+        await readLines.ConfigureAwait(false);
 
         return count;
     }
@@ -89,7 +90,7 @@ public class RegexTextSearcher : ITextSearcher
 
         using var reader = new StreamReader(stream, leaveOpen: true);
 
-        while ((await reader.ReadBlockAsync(buffer, cancellationToken)) > 0)
+        while ((await reader.ReadBlockAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
         {
             yield return string.Concat(new string(boundaryBuffer), new string(buffer));
             // Store the last section of text to avoid word boundary issues
