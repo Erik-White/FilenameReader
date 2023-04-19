@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FilenameReader\FilenameReader.Cli.csproj" />
+    <ProjectReference Include="..\FilenameReader.Cli\FilenameReader.Cli.csproj" />
   </ItemGroup>
 
 </Project>

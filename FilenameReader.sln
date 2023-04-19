@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilenameReader.Cli", "FilenameReader\FilenameReader.Cli.csproj", "{08F27FBC-172C-4303-B17C-0B1B5908A7C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilenameReader.Cli", "FilenameReader.Cli\FilenameReader.Cli.csproj", "{08F27FBC-172C-4303-B17C-0B1B5908A7C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilenameReader.Cli.Test", "FileNameReader.Cli.Test\FilenameReader.Cli.Test.csproj", "{873DDBC8-C212-47FD-83DD-85BAC5EE9CFA}"
 EndProject
