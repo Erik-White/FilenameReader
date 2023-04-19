@@ -23,7 +23,8 @@ public class FileTextSearcher : IFileTextSearcher
     public OneOf<int, ValidationFailed, NotFound, Error<Exception>> CountFileContents(
         FilePath filePath,
         string searchValue,
-        TextSearchOptions searchOptions = default)
+        TextSearchOptions searchOptions = default,
+        IProgress<float>? progress = null)
     {
         var validationResult = _filePathValidator.Validate(filePath);
         if (!validationResult.IsValid)
@@ -35,7 +36,7 @@ public class FileTextSearcher : IFileTextSearcher
         {
             using var fileStream = _fileSystem.File.OpenRead(filePath.FullPath);
 
-            return _textSearcher.CountStreamContents(fileStream, searchValue, searchOptions);
+            return _textSearcher.CountStreamContents(fileStream, searchValue, searchOptions, progress);
         }
         catch (FileNotFoundException)
         {
@@ -54,6 +55,7 @@ public class FileTextSearcher : IFileTextSearcher
         FilePath filePath,
         string searchValue,
         TextSearchOptions searchOptions = default,
+        IProgress<float>? progress = null,
         CancellationToken cancellationToken = default)
     {
         var validationResult = _filePathValidator.Validate(filePath);
@@ -66,7 +68,7 @@ public class FileTextSearcher : IFileTextSearcher
         {
             using var fileStream = _fileSystem.File.OpenRead(filePath.FullPath);
 
-            return await _textSearcher.CountStreamContentsAsync(fileStream, searchValue, searchOptions, cancellationToken);
+            return await _textSearcher.CountStreamContentsAsync(fileStream, searchValue, searchOptions, progress, cancellationToken);
         }
         catch (FileNotFoundException)
         {

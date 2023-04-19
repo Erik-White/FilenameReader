@@ -20,9 +20,9 @@ public class Program
         var textSearcher = serviceProvider.GetRequiredService<IFileTextSearcher>();
         var filePath = new FilePath(args.FirstOrDefault() ?? string.Empty);
 
-        logger.LogInformation("Counting filename instances in the contents of the file {filepath}", filePath.FullPath);
+        logger.LogInformation("Counting filename {filename} instances in the contents of the file {filepath}", filePath.Filename, filePath.FullPath);
 
-        var result = await textSearcher.CountFileContentsAsync(filePath, filePath.Filename);
+        var result = await textSearcher.CountFileContentsAsync(filePath, filePath.Filename, progress: GetProgress(logger));
 
         result.Switch(
             count => logger.LogInformation("Filename count: {count}", count),
@@ -41,5 +41,15 @@ public class Program
         serviceCollection.AddInfrastructureServices();
 
         return serviceCollection.BuildServiceProvider();
+    }
+
+    private static IProgress<float> GetProgress(ILogger<Program> logger)
+    {
+        var progress = new Progress<float>(value =>
+        {
+            logger.LogInformation("Progress: {value:P2}", value);
+        });
+
+        return progress;
     }
 }

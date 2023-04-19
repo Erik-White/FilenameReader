@@ -13,12 +13,12 @@ public class RegexTextSearcher : ITextSearcher
     /// Count the instances of <paramref name="searchValue"/> in the stream data.
     /// Assumes that data has a valid text encoding.
     /// </summary>
-    public int CountStreamContents(Stream stream, string searchValue, TextSearchOptions searchOptions)
+    public int CountStreamContents(Stream stream, string searchValue, TextSearchOptions searchOptions, IProgress<float>? progress = null)
     {
         var regexCaseOption = searchOptions.CaseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None;
         var filenameRegexPattern = GetSearchTextRegexPattern(searchValue, searchOptions);
 
-        return ReadLines(stream, searchValue.Length)
+        return ReadLines(stream, searchValue.Length, progress)
             .Where(line => !string.IsNullOrEmpty(line))
             .Sum(line => Regex.Matches(line!, filenameRegexPattern, regexCaseOption).Count);
     }
@@ -27,7 +27,7 @@ public class RegexTextSearcher : ITextSearcher
     /// Count the instances of <paramref name="searchValue"/> in the stream data.
     /// Assumes that data has a valid text encoding.
     /// </summary>
-    public async Task<int> CountStreamContentsAsync(Stream stream, string searchValue, TextSearchOptions searchOptions, CancellationToken cancellationToken)
+    public async Task<int> CountStreamContentsAsync(Stream stream, string searchValue, TextSearchOptions searchOptions, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
     {
         var regexCaseOption = searchOptions.CaseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None;
         var filenameRegexPattern = GetSearchTextRegexPattern(searchValue, searchOptions);
@@ -40,7 +40,7 @@ public class RegexTextSearcher : ITextSearcher
         {
             try
             {
-                await ReadLinesAsync(stream, searchValue.Length, cancellationToken)
+                await ReadLinesAsync(stream, searchValue.Length, progress, cancellationToken)
                     .Where(line => !string.IsNullOrEmpty(line))
                     .ForEachAsync(line => queue.Add(line!), cancellationToken);
             }
@@ -62,7 +62,7 @@ public class RegexTextSearcher : ITextSearcher
         return count;
     }
 
-    internal IEnumerable<string?> ReadLines(Stream stream, int boundarySize)
+    internal IEnumerable<string?> ReadLines(Stream stream, int boundarySize, IProgress<float>? progress = null)
     {
         char[] buffer = new char[TextBufferSize];
         char[] boundaryBuffer = new char[boundarySize];
@@ -74,13 +74,15 @@ public class RegexTextSearcher : ITextSearcher
             yield return string.Concat(new string(boundaryBuffer), new string(buffer));
             // Store the last section of text to avoid word boundary issues
             boundaryBuffer = buffer[new Range(buffer.Length - boundarySize, buffer.Length)];
+            progress?.Report((float)stream.Position / stream.Length);
         }
     }
 
     internal async IAsyncEnumerable<string?> ReadLinesAsync(
         Stream stream,
         int boundarySize,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
+        IProgress<float>? progress = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         char[] buffer = new char[TextBufferSize];
         char[] boundaryBuffer = new char[boundarySize];
@@ -92,6 +94,7 @@ public class RegexTextSearcher : ITextSearcher
             yield return string.Concat(new string(boundaryBuffer), new string(buffer));
             // Store the last section of text to avoid word boundary issues
             boundaryBuffer = buffer[new Range(buffer.Length - boundarySize, buffer.Length)];
+            progress?.Report((float)stream.Position / stream.Length);
         }
     }
 

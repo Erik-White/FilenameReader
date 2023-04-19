@@ -44,7 +44,7 @@ public class TextSearcherBenchmarks
     {
         using var stream = _fileSystem.File.OpenRead(_filePath.FullPath);
 
-        return await _textSearcher.CountStreamContentsAsync(stream, _filePath.Filename, new TextSearchOptions(), CancellationToken.None);
+        return await _textSearcher.CountStreamContentsAsync(stream, _filePath.Filename, new TextSearchOptions());
     }
 
     private static void WriteRandomContent(Stream stream, int fileSizeMegabytes)
